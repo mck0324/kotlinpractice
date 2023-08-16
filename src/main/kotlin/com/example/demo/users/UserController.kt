@@ -27,12 +27,26 @@ class UserController(
     //get user by id
     @GetMapping("/{id}")
     fun getUserById(@PathVariable("id") userId: Int) : ResponseEntity<User> {
-        val user = userRepository.findById(userId)
-        return if (user.isPresent) {
-            ResponseEntity(user.get(), HttpStatus.OK)
+        val user = userRepository.findById(userId).orElse(null)
+        return if (user != null) {
+            ResponseEntity(user, HttpStatus.OK)
         } else {
             ResponseEntity(HttpStatus.NOT_FOUND)
         }
     }
+
+    //updater user
+    @PutMapping("/{id}")
+    fun updateUserById(@PathVariable("id") userId: Int, @RequestBody user: User): ResponseEntity<User> {
+        val existingUser = userRepository.findById(userId).orElse(null)
+        if (existingUser == null) {
+            return ResponseEntity(HttpStatus.NOT_FOUND)
+        }
+        val updatedUser = existingUser.copy(name = user.name, email = user.email)
+        userRepository.save(updatedUser)
+        return ResponseEntity(updatedUser, HttpStatus.OK)
+    }
+
+
 
 }
