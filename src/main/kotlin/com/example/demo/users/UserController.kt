@@ -18,6 +18,8 @@ class UserController(
 
     //create user
     fun createUser(@RequestBody user: User) : ResponseEntity<User> {
-        ResponseEntity(userRepository.save(user), HttpStatus.CREATED)
+        val savedUser = userRepository.save(user)
+        return ResponseEntity(savedUser, HttpStatus.CREATED)
     }
+
 }
