@@ -47,6 +47,15 @@ class UserController(
         return ResponseEntity(updatedUser, HttpStatus.OK)
     }
 
+    //delete user
+    @DeleteMapping("/{id}")
+    fun deletedUserById(@PathVariable("id") userId: Int) : ResponseEntity<User> {
+        if(!userRepository.existsById(userId)) {
+            return ResponseEntity(HttpStatus.NOT_FOUND)
+        }
+        userRepository.deleteById(userId)
+        return ResponseEntity(HttpStatus.NO_CONTENT)
+    }
 
 
 }
